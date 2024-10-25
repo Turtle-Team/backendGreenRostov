@@ -3,25 +3,12 @@ from sqlalchemy.orm import Session
 from . import models
 from .database import SessionLocal, engine
 from pydantic import BaseModel
-from sqlalchemy.exc import IntegrityError
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-class EventCreate(BaseModel):
-    name: str
-    description: str
-    latitude: float
-    longitude: float
 
-class RegisterEvent(BaseModel):
-    user_id: int
-    event_id: int
-
-class EventMembersResponse(BaseModel):
-    event_id: int
-    members: list
 
 def get_db():
     db = SessionLocal()

@@ -1,16 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-from .database import Base
 
-class User(Base):
-    __tablename__ = "users"
+from ..model import Model
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
 
-    events = relationship("UserEvent", back_populates="user")
-
-class Event(Base):
+class Event(Model):
     __tablename__ = "events"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -21,7 +15,8 @@ class Event(Base):
 
     members = relationship("UserEvent", back_populates="event")
 
-class UserEvent(Base):
+
+class UserEvent(Model):
     __tablename__ = "user_events"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -32,5 +27,3 @@ class UserEvent(Base):
     event = relationship("Event", back_populates="members")
 
     __table_args__ = (UniqueConstraint('user_id', 'event_id', name='unique_user_event'),)
-
-
