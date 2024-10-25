@@ -1,4 +1,5 @@
 import fastapi
+
 from .auth.router import route as route_auth
 from .achievements.router import route as route_achievements
 from .patrol.router import route as route_patrol

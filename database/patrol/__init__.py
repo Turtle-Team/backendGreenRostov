@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Float
 import sqlalchemy.orm
 from sqlalchemy.orm import Mapped
 from .. import model
-from .. import user
 
 
 class Patrol(model.Model):
