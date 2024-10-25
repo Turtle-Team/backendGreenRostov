@@ -1,3 +1,4 @@
+import sqlalchemy.orm
 from sqlalchemy import Column, Integer, String
 
 from .. import model

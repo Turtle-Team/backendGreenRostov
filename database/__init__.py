@@ -20,5 +20,5 @@ class Database:
     def __init__(self):
         self.engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-    def get_market(self):
+    def get_marker(self):
         return scoped_session(sqlalchemy.orm.sessionmaker(bind=self.engine))

@@ -21,7 +21,7 @@ class UserAchievements(model.Model):
     __tablename__ = "user_achievements"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = sqlalchemy.orm.relationship(foreign_keys=[user.User.id])
-    achievement_id: Mapped[int] = sqlalchemy.orm.relationship(foreign_keys=[Achievements.id])
+    user_id: Mapped[int] = sqlalchemy.orm.mapped_column(sqlalchemy.ForeignKey("users.id"))
+    achievement_id: Mapped[int] = sqlalchemy.orm.mapped_column(sqlalchemy.ForeignKey("achievements.id"))
     reason: Mapped[str] = Column(String)
 
