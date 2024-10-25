@@ -36,7 +36,7 @@ def refresh_token(refresh: str):
 
 @route.post("/register")
 def register_user(user: UserWeb):
-    db: Session = database.Database().get_market()
+    db: Session = database.Database().get_marker()
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
@@ -51,7 +51,7 @@ def register_user(user: UserWeb):
 
 @route.post("/login")
 def login(user: UserWeb, response: fastapi.Response):
-    db: Session = database.Database().get_market()
+    db: Session = database.Database().get_marker()
     db_user = db.query(User).filter(User.username == user.username and User.password == user.password).first()
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
