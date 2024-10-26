@@ -29,3 +29,4 @@ class EventsResponse(pydantic.BaseModel):
     description: str
     latitude: float
     longitude: float
+    picture: str | None = None

@@ -1,3 +1,5 @@
+import typing
+
 import fastapi
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -63,7 +65,16 @@ def get_event_members(event_id: int, user: dict = fastapi.Depends(utils.get_curr
     return models.EventMembersResponse(event_id=event_id, members=member_list)
 
 @route.get("/all")
-def get_events(user: dict = fastapi.Depends(utils.get_current_user)):
+def get_events(user: dict = fastapi.Depends(utils.get_current_user)) -> typing.List[EventsResponse]:
     db: Session = database.Database().get_marker()
     events = db.query(Event).all()
-    return events
+    data = []
+    for event in events:
+        e = EventsResponse(id=event.id,
+                           name=event.name,
+                           description=event.description,
+                           latitude=event.latitude,
+                           longitude=event.longitude,
+                           picture=event.picture)
+        data.append(e)
+    return data
