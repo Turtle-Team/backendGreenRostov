@@ -1,27 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException
+from datetime import timedelta
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models
-# from .database import SessionLocal, engine
-from pydantic import BaseModel
-
-#TODO Сделать чтобы все заработало, убрав все лишнее и импортировав зависимости из проекта
-
-models.Base.metadata.create_all(bind=engine)
-
-#TODO Как например убрать это
-app = FastAPI()
+from .route import route
+from database.events import Event, UserEvent
 
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@app.post("/event/create")
-def create_event(event: EventCreate, db: Session = Depends(get_db)):
+# Роутинг для событий
+@route.post("/event/create")
+def create_event(event: models.EventCreate, db: Session = Depends(Event)):
     new_event = models.Event(**event.dict())
     db.add(new_event)
     db.commit()
@@ -29,8 +16,8 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
     return new_event
 
 
-@app.post("/event/register")
-def register_user_to_event(registration: RegisterEvent, db: Session = Depends(get_db)):
+@route.post("/event/register")
+def register_user_to_event(registration: models.RegisterEvent, db: Session = Depends(Event)):
     user_exists = db.query(models.User).filter(models.User.id == registration.user_id).first()
     if not user_exists:
         raise HTTPException(status_code=400, detail="User does not exist.")
@@ -51,22 +38,23 @@ def register_user_to_event(registration: RegisterEvent, db: Session = Depends(ge
     return user_event
 
 
-@app.get("/event/members/{event_id}", response_model=EventMembersResponse)
-def get_event_members(event_id: int, db: Session = Depends(get_db)):
+@route.get("/event/members/{event_id}", response_model=models.EventMembersResponse)
+def get_event_members(event_id: int, db: Session = Depends(UserEvent)):
     event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
     members = db.query(models.User).join(models.UserEvent).filter(models.UserEvent.event_id == event_id).all()
-    return EventMembersResponse(event_id=event_id, members=[member.name for member in members])
+    return models.EventMembersResponse(event_id=event_id, members=[member.name for member in members])
 
-@app.get("/users/")
-def get_users(db: Session = Depends(get_db)):
+
+@route.get("/users/")
+def get_users(db: Session = Depends(Event)):
     users = db.query(models.User).all()
     return users
 
-@app.get("/events/")
-def get_events(db: Session = Depends(get_db)):
+
+@route.get("/events/")
+def get_events(db: Session = Depends(Event)):
     events = db.query(models.Event).all()
     return events
-
