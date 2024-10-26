@@ -20,10 +20,9 @@ def create_token(data: dict, expires_delta: timedelta = None):
 def verify_token(token: str):
     try:
         payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        if payload.get("sub") is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return username
+        return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
     except jwt.InvalidTokenError:
