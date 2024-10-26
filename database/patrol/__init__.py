@@ -14,6 +14,3 @@ class Patrol(model.Model):
     y_pos = Column(Float)
     radius = Column(Integer)
     answers = Column(String, default='')
-
-
-
