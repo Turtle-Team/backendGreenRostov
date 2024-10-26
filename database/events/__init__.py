@@ -21,3 +21,11 @@ class UserEvent(Model):
     user_id: Mapped[int] = sqlalchemy.orm.mapped_column(ForeignKey('users.id'))
     event_id: Mapped[int] = sqlalchemy.orm.mapped_column(ForeignKey('events.id'))
 
+class EventsResponse(Model):
+    id: int
+    name: str
+    description: str
+    #date: datetime
+    latitude: float
+    longitude: float
+

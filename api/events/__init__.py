@@ -5,9 +5,10 @@ from sqlalchemy.orm import Session
 from . import models
 from api.user import utils
 from .route import route
-from database.events import Event, UserEvent
+from database.events import Event, UserEvent, EventsResponse
 from database.user import User
 import database
+from typing import List
 
 
 # Роутинг для событий
@@ -60,3 +61,18 @@ def get_event_members(event_id: int, user: dict = fastapi.Depends(utils.get_curr
 
     return models.EventMembersResponse(event_id=event_id, members=member_list)
 
+@route.get("/events", response_model=List[EventsResponse])
+def get_events(user: dict = fastapi.Depends(utils.get_current_user)):
+    db: Session = database.Database().get_marker()
+    events = db.query(Event).all()
+    return [
+        EventsResponse(
+            id=event.id,
+            name=event.name,
+            description=event.description,
+            #date=event.date,
+            latitude=event.latitude,
+            longitude=event.longitude
+        )
+        for event in events
+    ]
