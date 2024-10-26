@@ -1,5 +1,5 @@
 import fastapi
-from .router import route
+from .route import route
 from ..user import utils
 from .models import ReturnAnswer, Question
 from .ml import NeuroCommentator
@@ -13,3 +13,4 @@ def test_expert(quest: Question,  user: dict = fastapi.Depends(utils.get_current
 def neuro_expert(quest: Question,  user: dict = fastapi.Depends(utils.get_current_user)) -> ReturnAnswer:
     answer = NeuroCommentator().generate_comment(quest)
     return ReturnAnswer(question=quest.question, answer=answer)
+
