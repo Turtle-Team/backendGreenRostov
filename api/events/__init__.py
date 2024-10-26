@@ -1,11 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models
-from .database import SessionLocal, engine
+# from .database import SessionLocal, engine
 from pydantic import BaseModel
+
+#TODO Сделать чтобы все заработало, убрав все лишнее и импортировав зависимости из проекта
 
 models.Base.metadata.create_all(bind=engine)
 
+#TODO Как например убрать это
 app = FastAPI()
 
 
@@ -56,6 +59,7 @@ def get_event_members(event_id: int, db: Session = Depends(get_db)):
 
     members = db.query(models.User).join(models.UserEvent).filter(models.UserEvent.event_id == event_id).all()
     return EventMembersResponse(event_id=event_id, members=[member.name for member in members])
+
 @app.get("/users/")
 def get_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
