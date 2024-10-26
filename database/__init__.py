@@ -8,7 +8,7 @@ import setting
 #SQLALCHEMY_DATABASE_URL = setting.BASE_URL
 SQLALCHEMY_DATABASE_URL = "postgresql://hacka:W9PQaaozKQek6ULjLbgYWo4FXCJqVvif@62.109.29.83/hack"
 
-modules = os.listdir('database')
+modules = os.listdir(os.path.dirname(__file__))
 
 for module in modules:
     if os.path.isdir(os.path.join('database', module)):

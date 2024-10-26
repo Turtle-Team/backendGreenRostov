@@ -3,9 +3,8 @@ from typing import List
 
 class OperationResponse(pydantic.BaseModel):
     id: int
-    retailPlace: str
+    retailPlace: str | None
     ecashTotalSum: float
-    items: str
     totalSum: float
-    date_time: int
-    user: str
+    date_time: int | None
+    user: str | None

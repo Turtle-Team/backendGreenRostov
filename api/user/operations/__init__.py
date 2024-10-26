@@ -1,6 +1,5 @@
 import typing
 import fastapi
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models
 from api.user import utils
@@ -11,14 +10,13 @@ import database
 @route.get("/all", response_model=typing.List[models.OperationResponse])
 def get_operations(user: dict = fastapi.Depends(utils.get_current_user)) -> typing.List[models.OperationResponse]:
     db: Session = database.Database().get_marker()
-    operations = db.query(Operation).all()
+    operations = db.query(Operation).filter_by(user=user["id"]).all()
     data = []
     for operation in operations:
         op = models.OperationResponse(
             id=operation.id,
             retailPlace=operation.retailPlace,
             ecashTotalSum=operation.ecashTotalSum,
-            items=operation.items,
             totalSum=operation.totalSum,
             date_time=operation.date_time,
             user=operation.user
