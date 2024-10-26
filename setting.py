@@ -1,6 +1,9 @@
+import os
+
 SECRET_KEY = "secretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 999999
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 BASE_URL = "postgresql://hacka:W9PQaaozKQek6ULjLbgYWo4FXCJqVvif@62.109.29.83/hack"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
