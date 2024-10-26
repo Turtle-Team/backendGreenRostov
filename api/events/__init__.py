@@ -60,13 +60,3 @@ def get_event_members(event_id: int, user: dict = fastapi.Depends(utils.get_curr
 
     return models.EventMembersResponse(event_id=event_id, members=member_list)
 
-@route.get("/users/")
-def get_users(db: Session = Depends(Event)):
-    users = db.query(User).all()
-    return users
-
-
-# @route.get("/events/")
-# def get_events(db: Session = Depends(Event)):
-#     events = db.query(models.Event).all()
-#     return events
