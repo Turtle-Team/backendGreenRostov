@@ -1,15 +1,13 @@
-from datetime import timedelta
 import fastapi
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models
 from api.user import utils
 from .route import route
 from database.events import Event, UserEvent
-from .models import EventsResponse
+from api.events.models import EventsResponse
 from database.user import User
 import database
-from typing import List
 
 
 # Роутинг для событий
@@ -20,6 +18,7 @@ def create_event(event: models.EventCreate, user: dict = fastapi.Depends(utils.g
     new_event.description = event.description
     new_event.latitude = event.latitude
     new_event.longitude = event.longitude
+    new_event.picture = event.picture
     db: Session = database.Database().get_marker()
     db.add(new_event)
     db.commit()
@@ -63,18 +62,8 @@ def get_event_members(event_id: int, user: dict = fastapi.Depends(utils.get_curr
 
     return models.EventMembersResponse(event_id=event_id, members=member_list)
 
-@route.get("/events")
-def get_events(user: dict = fastapi.Depends(utils.get_current_user)) -> List[EventsResponse]:
+@route.get("/all")
+def get_events(user: dict = fastapi.Depends(utils.get_current_user)):
     db: Session = database.Database().get_marker()
     events = db.query(Event).all()
-    return [
-        EventsResponse(
-            id=event.id,
-            name=event.name,
-            description=event.description,
-            #date=event.date,
-            latitude=event.latitude,
-            longitude=event.longitude
-        )
-        for event in events
-    ]
+    return events

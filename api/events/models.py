@@ -1,7 +1,5 @@
 import pydantic
 from typing import List
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Column, String, Float, DateTime
 
 
 class EventCreate(pydantic.BaseModel):
@@ -9,6 +7,7 @@ class EventCreate(pydantic.BaseModel):
     description: str
     latitude: float
     longitude: float
+    picture: str
 
 
 class RegisterEvent(pydantic.BaseModel):
