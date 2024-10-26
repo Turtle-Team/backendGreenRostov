@@ -12,7 +12,7 @@ class Event(Model):
     description: Mapped[str] = sqlalchemy.orm.mapped_column(String)
     latitude: Mapped[float] = sqlalchemy.orm.mapped_column(Float)
     longitude: Mapped[float] = sqlalchemy.orm.mapped_column(Float)
-    picture: Mapped[str] = sqlalchemy.orm.mapped_column(String)
+    picture: Mapped[str] = sqlalchemy.orm.mapped_column(String, nullable=True)
 
 
 class UserEvent(Model):
