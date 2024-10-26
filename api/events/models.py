@@ -1,4 +1,5 @@
 import pydantic
+from typing import List
 
 
 class EventCreate(pydantic.BaseModel):
@@ -13,6 +14,12 @@ class RegisterEvent(pydantic.BaseModel):
     event_id: int
 
 
+class Member(pydantic.BaseModel):
+    first_name: str
+    last_name: str
+    patronymic: str
+
+# Обновляем класс ответа для участников события
 class EventMembersResponse(pydantic.BaseModel):
     event_id: int
-    members: list
+    members: List[Member]

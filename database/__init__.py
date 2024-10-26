@@ -5,9 +5,8 @@ import importlib
 import os
 
 import setting
-
-SQLALCHEMY_DATABASE_URL = setting.BASE_URL
-# SQLALCHEMY_DATABASE_URL = "postgresql://user_name:password@localhost/postgres"
+#SQLALCHEMY_DATABASE_URL = setting.BASE_URL
+SQLALCHEMY_DATABASE_URL = "postgresql://hacka:W9PQaaozKQek6ULjLbgYWo4FXCJqVvif@62.109.29.83/hack"
 
 modules = os.listdir('database')
 
