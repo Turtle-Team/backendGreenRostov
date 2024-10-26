@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from . import models
 from api.user import utils
 from .route import route
-from database.events import Event, UserEvent, EventsResponse
+from database.events import Event, UserEvent
+from .models import EventsResponse
 from database.user import User
 import database
 from typing import List
@@ -29,19 +30,19 @@ def create_event(event: models.EventCreate, user: dict = fastapi.Depends(utils.g
 @route.post("/register")
 def register_user_to_event(registration: models.RegisterEvent, user: dict = fastapi.Depends(utils.get_current_user)):
     db: Session = database.Database().get_marker()
-    user_exists = db.query(User).filter(User.id == registration.user_id).first()
+    user_exists = db.query(User).filter(User.id == user['id']).first()
     if not user_exists:
         raise HTTPException(status_code=400, detail="User does not exist.")
 
     existing_registration = db.query(UserEvent).filter(
-        UserEvent.user_id == registration.user_id,
+        UserEvent.user_id == user['id'],
         UserEvent.event_id == registration.event_id
     ).first()
 
     if existing_registration:
         raise HTTPException(status_code=400, detail="User is already registered for this event.")
 
-    user_event = UserEvent(user_id=registration.user_id, event_id=registration.event_id)
+    user_event = UserEvent(user_id=user['id'], event_id=registration.event_id)
     db.add(user_event)
     db.commit()
     db.refresh(user_event)
@@ -57,12 +58,13 @@ def get_event_members(event_id: int, user: dict = fastapi.Depends(utils.get_curr
         raise HTTPException(status_code=404, detail="Event not found")
 
     members = db.query(User).join(UserEvent).filter(UserEvent.event_id == event_id).all()
-    member_list = [models.Member(first_name=member.first_name, last_name=member.last_name, patronymic=member.patronymic) for member in members]
+    # member_list = [models.Member(first_name=member.first_name, last_name=member.last_name, patronymic=member.patronymic) for member in members]
+    member_list = [models.Member(first_name=member.username, last_name=member.username, patronymic=member.username) for member in members]
 
     return models.EventMembersResponse(event_id=event_id, members=member_list)
 
-@route.get("/events", response_model=List[EventsResponse])
-def get_events(user: dict = fastapi.Depends(utils.get_current_user)):
+@route.get("/events")
+def get_events(user: dict = fastapi.Depends(utils.get_current_user)) -> List[EventsResponse]:
     db: Session = database.Database().get_marker()
     events = db.query(Event).all()
     return [

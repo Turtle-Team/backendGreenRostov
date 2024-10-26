@@ -12,7 +12,6 @@ class EventCreate(pydantic.BaseModel):
 
 
 class RegisterEvent(pydantic.BaseModel):
-    user_id: int
     event_id: int
 
 
@@ -25,12 +24,9 @@ class EventMembersResponse(pydantic.BaseModel):
     event_id: int
     members: List[Member]
 
-class Event(pydantic.BaseModel):
-    __tablename__ = "events"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String, index=True)
-    description: Mapped[str] = mapped_column(String)
-    #date: Mapped[datetime] = mapped_column(DateTime)
-    latitude: Mapped[float] = mapped_column(Float)
-    longitude: Mapped[float] = mapped_column(Float)
+class EventsResponse(pydantic.BaseModel):
+    id: int
+    name: str
+    description: str
+    latitude: float
+    longitude: float
