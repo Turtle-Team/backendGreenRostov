@@ -10,7 +10,7 @@ class Operation(Model):
     id: Mapped[int] = orm.mapped_column(primary_key=True, index=True)
     retail_place: Mapped[str] = orm.mapped_column(String)
     ecash_sum: Mapped[float] = orm.mapped_column(Float)
-    totalSum: Mapped[float] = orm.mapped_column(Float)
+    total_sum: Mapped[float] = orm.mapped_column(Float)
     date_time: Mapped[int] = orm.mapped_column(Integer)
     dep_name: Mapped[str] = orm.mapped_column(String)
     user_id: Mapped[int] = orm.mapped_column(sqlalchemy.ForeignKey('users.id'))
@@ -24,5 +24,5 @@ class OperationBillData(Model):
     operation_id = orm.mapped_column(sqlalchemy.ForeignKey('operations.id'))
     nomenclature: Mapped[str]
     sum: Mapped[float]
-    eco_rating: Mapped[float]  = orm.mapped_column(sqlalchemy.ForeignKey('operations.id'), nullable=True, default=None)
+    eco_rating: Mapped[float] = orm.mapped_column(nullable=True, default=None)
 
