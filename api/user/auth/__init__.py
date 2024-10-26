@@ -9,9 +9,9 @@ import database
 import setting
 from database.user import User
 from . import utils
-from .models import UserWeb, JwtToken
-from .utils import create_token
+from .models import UserWeb, JwtToken, UserAuth
 from .router import route
+from .utils import create_token
 
 
 @route.post("/refresh")
@@ -50,17 +50,17 @@ def register_user(user: UserWeb):
 
 
 @route.post("/login")
-def login(user: UserWeb, response: fastapi.Response):
+def login(user: UserAuth, response: fastapi.Response):
     db: Session = database.Database().get_marker()
     db_user = db.query(User).filter(User.username == user.username and User.password == user.password).first()
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
 
     access_token_expires = timedelta(minutes=setting.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_token(data={"sub": db_user.username}, expires_delta=access_token_expires)
+    access_token = create_token(data={"sub": db_user.username, 'id': db_user.id}, expires_delta=access_token_expires)
 
     refresh_token_expires = timedelta(days=setting.REFRESH_TOKEN_EXPIRE_DAYS)
-    refresh_token = create_token(data={"sub": db_user.username}, expires_delta=refresh_token_expires)
+    refresh_token = create_token(data={"sub": db_user.username, 'id': db_user.id}, expires_delta=refresh_token_expires)
     refresh_data = (datetime.now() + timedelta(setting.ACCESS_TOKEN_EXPIRE_MINUTES)).isoformat()
     response.headers.update({'Authorization': f'Bearer {access_token}'})
     response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, expires=refresh_data)
