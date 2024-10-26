@@ -4,8 +4,9 @@ from sqlalchemy.orm import scoped_session
 import importlib
 import os
 
+import setting
 
-SQLALCHEMY_DATABASE_URL = os.getenv('BASE_URL')
+SQLALCHEMY_DATABASE_URL = setting.BASE_URL
 # SQLALCHEMY_DATABASE_URL = "postgresql://user_name:password@localhost/postgres"
 
 modules = os.listdir('database')
