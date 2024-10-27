@@ -14,6 +14,7 @@ class Operation(Model):
     date_time: Mapped[int] = orm.mapped_column(Integer)
     dep_name: Mapped[str] = orm.mapped_column(String)
     user_id: Mapped[int] = orm.mapped_column(sqlalchemy.ForeignKey('users.id'))
+    request_number: Mapped[int] = orm.mapped_column(Integer)
 
 
 
