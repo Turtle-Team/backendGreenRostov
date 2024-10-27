@@ -21,5 +21,5 @@ def create_patrol():
         patrol.user_id = user.id
 
         session.add(patrol)
-        session.commit()
+    session.commit()
 
