@@ -1,7 +1,9 @@
 import database
 from . import Achievements, UserAchievements
 from .models import AllAchievements
-
+from . import models
+from sqlalchemy import func
+from database.user import User
 
 class Db(database.Database):
     def insert_new_ready(self, data: UserAchievements):
@@ -19,6 +21,23 @@ class Db(database.Database):
 
     def get_all_achievements(self):
         return self.get_marker().query(Achievements).all()
+
+    def get_leaders(self):
+        leaders =(self.get_marker().query(
+            UserAchievements.user_id,
+            func.sum(Achievements.experience).label("total_experience"),
+        ).join(Achievements, UserAchievements.achievement_id == Achievements.id)
+                  .group_by(UserAchievements.user_id)
+                  .order_by(func.sum(Achievements.experience).desc()).limit(5)
+                  .all())
+        user_ids = list(map(lambda x: x[0], leaders))
+        users = self.get_marker().query(User).filter(User.id.in_(user_ids)).all()
+        result = []
+        for i in leaders:
+            r = list(filter(lambda x: x.id == i[0], users))
+            result.append(models.Leaders(name=r[-1].username, exp=i[1]))
+
+        return result
 
     def get_all_by_user(self, user_id):
         all_achievements: list[Achievements] = self.get_all_achievements()

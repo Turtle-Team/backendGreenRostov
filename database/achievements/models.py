@@ -8,3 +8,7 @@ class AllAchievements(pydantic.BaseModel):
     exp: int
     image: str
     complete: bool = False
+
+class Leaders(pydantic.BaseModel):
+    name: str
+    exp: int
