@@ -31,7 +31,7 @@ class NeuroCommentator:
         return response.choices[0].message.content.strip()
 
 
-def create_patrol():
+def create():
     session = Database().get_marker()
     no_eco_rating = session.query(OperationBillData).filter(OperationBillData.eco_rating == None).all()
     nc = NeuroCommentator()
@@ -42,5 +42,5 @@ def create_patrol():
         session.query(OperationBillData).where(OperationBillData.id == bill.id).update({'eco_rating': answer[-1]['eco_rating']})
         session.commit()
 
-create_patrol()
+create()
 
